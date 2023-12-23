@@ -3,11 +3,11 @@ html {
 }
 
 body {
+	position: relative;
 	width: 100vw;
 	height: 100vh;
 	margin: 0;
 	padding: 0;
-	position: relative;
 }
 
 div#header {
@@ -37,51 +37,36 @@ div#header>div>span {
     color: #ccd;
 }
 
-div#game {
-	border: 1px solid #558;
-	position: relative;
-	display: inline-block;
-}
-
-div#game.bordered {
-	box-shadow: 0 0 20px #558;
-}
-
-div#food {
-	position: absolute;
-	background-color: #522;
-}
-
-div#s.ai>div {
+div.snake.ai>div {
 	background-color: #223;
 }
 
-div#s>div[o='0'] {transform: rotate(180deg);}
-div#s>div[o='1'] {transform: rotate(-90deg);}
-div#s>div[o='2'] {transform: rotate(0deg);}
-div#s>div[o='3'] {transform: rotate(90deg);}
+div.snake>div[o='0'] {transform: rotate(180deg);}
+div.snake>div[o='1'] {transform: rotate(-90deg);}
+div.snake>div[o='2'] {transform: rotate(0deg);}
+div.snake>div[o='3'] {transform: rotate(90deg);}
 
-div#s>div:nth-last-child(1)  { background-image: linear-gradient(to left, #558, rgb(80, 80, 131)); }
-div#s>div:nth-last-child(2)  { background-image: linear-gradient(to left, rgb(80, 80, 131), rgb(75, 75, 126)); }
-div#s>div:nth-last-child(3)  { background-image: linear-gradient(to left, rgb(75, 75, 126), rgb(70, 70, 121)); }
-div#s>div:nth-last-child(4)  { background-image: linear-gradient(to left, rgb(70, 70, 121), rgb(65, 65, 116)); }
-div#s>div:nth-last-child(5)  { background-image: linear-gradient(to left, rgb(65, 65, 116), rgb(60, 60, 111)); }
-div#s>div:nth-last-child(6)  { background-image: linear-gradient(to left, rgb(60, 60, 111), rgb(55, 55, 106)); }
-div#s>div:nth-last-child(7)  { background-image: linear-gradient(to left, rgb(55, 55, 106), rgb(50, 50, 101)); }
-div#s>div:nth-last-child(8)  { background-image: linear-gradient(to left, rgb(50, 50, 101), rgb(45, 45,  96)); }
-div#s>div:nth-last-child(9)  { background-image: linear-gradient(to left, rgb(45, 45,  96), rgb(40, 40,  91)); }
-div#s>div:nth-last-child(10) { background-image: linear-gradient(to left, rgb(40, 40,  91), #225); }
+div.snake>div:nth-last-child(1)  { background-image: linear-gradient(to left, #558, rgb(80, 80, 131)); }
+div.snake>div:nth-last-child(2)  { background-image: linear-gradient(to left, rgb(80, 80, 131), rgb(75, 75, 126)); }
+div.snake>div:nth-last-child(3)  { background-image: linear-gradient(to left, rgb(75, 75, 126), rgb(70, 70, 121)); }
+div.snake>div:nth-last-child(4)  { background-image: linear-gradient(to left, rgb(70, 70, 121), rgb(65, 65, 116)); }
+div.snake>div:nth-last-child(5)  { background-image: linear-gradient(to left, rgb(65, 65, 116), rgb(60, 60, 111)); }
+div.snake>div:nth-last-child(6)  { background-image: linear-gradient(to left, rgb(60, 60, 111), rgb(55, 55, 106)); }
+div.snake>div:nth-last-child(7)  { background-image: linear-gradient(to left, rgb(55, 55, 106), rgb(50, 50, 101)); }
+div.snake>div:nth-last-child(8)  { background-image: linear-gradient(to left, rgb(50, 50, 101), rgb(45, 45,  96)); }
+div.snake>div:nth-last-child(9)  { background-image: linear-gradient(to left, rgb(45, 45,  96), rgb(40, 40,  91)); }
+div.snake>div:nth-last-child(10) { background-image: linear-gradient(to left, rgb(40, 40,  91), #225); }
 
-div#s.ai>div:nth-last-child(1)  { background-image: linear-gradient(to left, #558, rgb(80, 80, 128)); }
-div#s.ai>div:nth-last-child(2)  { background-image: linear-gradient(to left, rgb(80, 80, 128), rgb(75, 75, 119)); }
-div#s.ai>div:nth-last-child(3)  { background-image: linear-gradient(to left, rgb(75, 75, 119), rgb(70, 70, 111)); }
-div#s.ai>div:nth-last-child(4)  { background-image: linear-gradient(to left, rgb(70, 70, 111), rgb(65, 65, 102)); }
-div#s.ai>div:nth-last-child(5)  { background-image: linear-gradient(to left, rgb(65, 65, 102), rgb(60, 60,  94)); }
-div#s.ai>div:nth-last-child(6)  { background-image: linear-gradient(to left, rgb(60, 60,  94), rgb(55, 55,  85)); }
-div#s.ai>div:nth-last-child(7)  { background-image: linear-gradient(to left, rgb(55, 55,  85), rgb(50, 50,  78)); }
-div#s.ai>div:nth-last-child(8)  { background-image: linear-gradient(to left, rgb(50, 50,  78), rgb(45, 45,  67)); }
-div#s.ai>div:nth-last-child(9)  { background-image: linear-gradient(to left, rgb(45, 45,  67), rgb(40, 40,  59)); }
-div#s.ai>div:nth-last-child(10) { background-image: linear-gradient(to left, rgb(40, 40,  59), #223); }
+div.snake.ai>div:nth-last-child(1)  { background-image: linear-gradient(to left, #558, rgb(80, 80, 128)); }
+div.snake.ai>div:nth-last-child(2)  { background-image: linear-gradient(to left, rgb(80, 80, 128), rgb(75, 75, 119)); }
+div.snake.ai>div:nth-last-child(3)  { background-image: linear-gradient(to left, rgb(75, 75, 119), rgb(70, 70, 111)); }
+div.snake.ai>div:nth-last-child(4)  { background-image: linear-gradient(to left, rgb(70, 70, 111), rgb(65, 65, 102)); }
+div.snake.ai>div:nth-last-child(5)  { background-image: linear-gradient(to left, rgb(65, 65, 102), rgb(60, 60,  94)); }
+div.snake.ai>div:nth-last-child(6)  { background-image: linear-gradient(to left, rgb(60, 60,  94), rgb(55, 55,  85)); }
+div.snake.ai>div:nth-last-child(7)  { background-image: linear-gradient(to left, rgb(55, 55,  85), rgb(50, 50,  78)); }
+div.snake.ai>div:nth-last-child(8)  { background-image: linear-gradient(to left, rgb(50, 50,  78), rgb(45, 45,  67)); }
+div.snake.ai>div:nth-last-child(9)  { background-image: linear-gradient(to left, rgb(45, 45,  67), rgb(40, 40,  59)); }
+div.snake.ai>div:nth-last-child(10) { background-image: linear-gradient(to left, rgb(40, 40,  59), #223); }
 
 div#overlay {
     position: absolute;
