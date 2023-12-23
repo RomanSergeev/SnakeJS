@@ -43,6 +43,7 @@ function Snake(snakeDiv, styleElement, len, _ow) {
 		}
 		var head = snakeDiv.children[snakeDiv.children.length - 1];
 		head.setAttribute("o", 0);
+		this.direction = 2;
 	}
 	
 	this.contains = function(elem) {

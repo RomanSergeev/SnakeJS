@@ -40,18 +40,12 @@ window.addEventListener("keydown", function(event) {
 
 // 37 left 38 up 39 right 40 down
 var snake, foodpos;
-var curDir, inputDir;
+var inputDir;
 var delay;
 var gameover;
 var stackedInput = false;
 var inputStack = [];
 var M, N, WIDTH_OUTER, WIDTH_INNER, w2;
-
-function setDirection(dir) {
-	/*if ((dir - curDir) & 1) {
-		curDir = dir;
-	}*/
-}
 
 function createField(m, n) {
 	M = m;
@@ -74,13 +68,13 @@ function createField(m, n) {
 		height: " + WIDTH_INNER + "px;\n\
 	}";
 	snake = new Snake($("s"), $("snakeStyle"), 4, ow);
-	inputDir = curDir = 2;
+	inputDir = snake.direction;
 }
 
 function dropFood() {
 	var pos;
 	do {
-		pos = [Math.floor(Math.random() * M), Math.floor(Math.random() * N)];
+		pos = [randomInteger(M), randomInteger(N)];
 	} while (snake.contains(pos));
 	foodpos = pos.slice();
 	$("food").style.left = pos[1] * WIDTH_OUTER + w2/2 + "px";
@@ -93,10 +87,10 @@ function moveRec() {
 }
 
 function move() {
-	if ((inputDir - curDir) & 1) {
-		curDir = inputDir;
+	if ((inputDir - snake.direction) & 1) {
+		snake.direction = inputDir;
 	}
-	var dir = curDir;
+	var dir = snake.direction;
 	var dx = (dir - 1) % 2;
 	var dy = (dir - 2) % 2;
 	var head = snake.head();
@@ -107,7 +101,7 @@ function move() {
 		acn($("overlay"), "shown");
 		return;
 	}
-	elem = [(elem[0] + M) % M, (elem[1] + N) % N];
+	elem = [byMod(elem[0], M), byMod(elem[1], N)];
 	var eat = (elem[0] == foodpos[0] && elem[1] == foodpos[1]);
 	snake.move(elem, dir, eat);
 	

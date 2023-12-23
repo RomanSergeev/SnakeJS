@@ -144,20 +144,18 @@ function oddify(x) {
 }
 
 /**
- * @in: x == {n}
- * n == m * 2^k (m is odd) - non-negative integer
- * n becomes m
- * @out: k (integer)
+ * @in: n (integer)
+ * @out: whether n is a prime (boolean)
  */
-function isPrime(x) {
-	for (var y = 2; y <= Math.sqrt(x); y++)
-		if (x % y == 0) return false;
+function isPrime(n) {
+	for (var i = 2; i <= Math.sqrt(n); ++i)
+		if (n % i == 0) return false;
 	return true;
 }
 
 /**
  * @in: x (integer)
- * @out: 
+ * @out: object with keys representing primes and values being number of times a prime is included in x
  */
 function factorize(x) {
 	x = Math.abs(x);
