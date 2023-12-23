@@ -52,19 +52,6 @@ div#food {
 	background-color: #522;
 }
 
-div#s {
-	position: absolute;
-	width: 0;
-	height: 0;
-}
-
-div#s>div {
-	position: absolute;
-	background-color: #225;
-	/*border-radius: 5px;*/
-	display: inline-block;
-}
-
 div#s.ai>div {
 	background-color: #223;
 }
