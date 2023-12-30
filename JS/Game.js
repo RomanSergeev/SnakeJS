@@ -4,9 +4,10 @@ function Game(M, N, gameDiv, startDelay) {
 	var delay = startDelay;
 	var wrap = false;
 	var m, n;
-	var inputDir;
+	var inputStack;
 	var foodpos, foodDiv;
 	var ow, iw, w2;
+	var stacked;
 	var gameStyle = document.createElement("style");
 	document.body.appendChild(gameStyle);
 	
@@ -24,18 +25,17 @@ function Game(M, N, gameDiv, startDelay) {
 		move();
 		!gameover && setTimeout(run, delay);
 	}
+	
+	function processInput() {
+		if (inputStack.length == 0) return;
+		snake.direction = inputStack[0];
+		inputStack = inputStack.slice(1);
+	}
 
 	function move() {
 		if (!snake) return;
-		if ((inputDir - snake.direction) & 1) {
-			snake.direction = inputDir;
-		}
-		var dir = snake.direction;
-		var dx = (dir - 1) % 2;
-		var dy = (dir - 2) % 2;
-		var head = snake.head();
-		var elem = [head[0] + dy, head[1] + dx];
-		var wrap = $("wrap").checked;
+		processInput();
+		var elem = snake.getNextTile();
 		if (!wrap && (elem[0] == -1 || elem[0] == m || elem[1] == -1 || elem[1] == n) || snake.contains(elem)) {
 			gameover = true;
 			acn($("overlay"), "shown");
@@ -43,7 +43,7 @@ function Game(M, N, gameDiv, startDelay) {
 		}
 		elem = [byMod(elem[0], m), byMod(elem[1], n)];
 		var eat = (elem[0] == foodpos[0] && elem[1] == foodpos[1]);
-		snake.move(elem, dir, eat);
+		snake.move(elem, eat);
 		
 		if (eat) {
 			dropFood();
@@ -80,15 +80,34 @@ function Game(M, N, gameDiv, startDelay) {
 		}";
 	}
 	
-	this.stackInput = function(input) { inputDir = input; }
+	function validInput(dir1, dir2) { return (dir1 - dir2) & -2 != dir1 - dir2; }
+	
+	this.stackInput = function(input) {
+		if (!snake) return;
+		if (!isIntegerInRange(input, 0, 3)) return;
+		if (!stacked || inputStack.length == 0) {
+			if (validInput(input, snake.direction))
+				inputStack = [input];
+			return;
+		}
+		var last = inputStack[inputStack.length - 1];
+		if (validInput(input, last))
+			inputStack.push(input);
+	}
+	
+	this.setStacked = x => {
+		stacked = !!x;
+		if (!stacked) inputStack = inputStack.slice(0, 1);
+	}
 	
 	this.restart = function(len) {
 		snake.reset(len, ow);
 		gameover = false;
 		delay = startDelay;
+		inputStack = [];
 		dropFood();
 		rcn($("overlay"), "shown");
-		inputDir = 2;
+		//inputStack = [snake.direction];
 		run();
 	}
 	
@@ -98,7 +117,7 @@ function Game(M, N, gameDiv, startDelay) {
 		acn(snakeDiv, "snake");
 		gameDiv.appendChild(snakeDiv);
 		snake = new Snake(snakeDiv, len, ow);
-		inputDir = snake.direction;
+		inputStack = [];
 	}
 	
 	this.setSnakeStyle = function(colHead, colTail, colHeadAI, colTailAI) {

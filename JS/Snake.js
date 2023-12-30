@@ -78,8 +78,17 @@ function Snake(snakeDiv, len, _ow) {
 		return false;
 	}
 	
-	this.move = function(pos, dir, eat) {
+	this.getNextTile = function() {
+		var dir = this.direction;
+		var dx = (dir - 1) % 2;
+		var dy = (dir - 2) % 2;
+		var head = body[body.length - 1];
+		return [head[0] + dy, head[1] + dx];
+	}
+	
+	this.move = function(pos, eat) {
 		body.push(pos);
+		var dir = this.direction;
 		var div = document.createElement("div");
 		snakeDiv.lastChild.setAttribute("o", dir);
 		div.setAttribute("o", (dir + 2) % 4);

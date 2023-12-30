@@ -126,6 +126,10 @@ function isNumeric(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
+function isIntegerInRange(x, a, b) {
+	return Number.isFinite(a) && Number.isFinite(b) && Number.isInteger(x) && x <= Math.max(a, b) && x >= Math.min(a, b);
+}
+
 /**
  * @in: x == {n}
  * n == m * 2^k (m is odd) - non-negative integer
