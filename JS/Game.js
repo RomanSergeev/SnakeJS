@@ -1,4 +1,4 @@
-function Game(M, N, gameDiv, gameStyle, startDelay) {
+function Game(M, N, gameDiv, startDelay) {
 	var snake = false;
 	var gameover = false;
 	var delay = startDelay;
@@ -7,6 +7,8 @@ function Game(M, N, gameDiv, gameStyle, startDelay) {
 	var inputDir;
 	var foodpos, foodDiv;
 	var ow, iw, w2;
+	var gameStyle = document.createElement("style");
+	document.body.appendChild(gameStyle);
 	
 	function dropFood() {
 		var pos;
@@ -52,7 +54,7 @@ function Game(M, N, gameDiv, gameStyle, startDelay) {
 	function createField(M, N) {
 		m = M;
 		n = N;
-		var dimX = document.documentElement.clientWidth - 2;  // 2 for border
+		var dimX = document.documentElement.clientWidth - 2; // 2 for border
 		var dimY = document.documentElement.clientHeight - 2;
 		ow = Math.min(20, Math.max(1, Math.min(Math.floor(dimX / n), Math.floor(dimY / m))));
 		iw = ow / 1.25;
@@ -83,18 +85,24 @@ function Game(M, N, gameDiv, gameStyle, startDelay) {
 	this.restart = function(len) {
 		snake.reset(len, ow);
 		gameover = false;
+		delay = startDelay;
+		dropFood();
 		rcn($("overlay"), "shown");
 		inputDir = 2;
 		run();
 	}
 	
-	this.createSnake = function(styleElement, len) {
+	this.createSnake = function(len) {
 		if (snake) { this.restart(len); return; }
 		var snakeDiv = document.createElement("div");
 		acn(snakeDiv, "snake");
 		gameDiv.appendChild(snakeDiv);
-		snake = new Snake(snakeDiv, styleElement, len, ow);
+		snake = new Snake(snakeDiv, len, ow);
 		inputDir = snake.direction;
+	}
+	
+	this.setSnakeStyle = function(colHead, colTail, colHeadAI, colTailAI) {
+		snake?.updateColors(colHead, colTail, colHeadAI, colTailAI);
 	}
 	
 	this.setWrap = function(wrapped) {

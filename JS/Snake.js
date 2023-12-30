@@ -1,9 +1,13 @@
-function Snake(snakeDiv, styleElement, len, _ow) {
+function Snake(snakeDiv, len, _ow) {
 	var body;
 	var ow, iw, w2;
+	var styleMain = document.createElement("style");
+	var styleTail = document.createElement("style");
+	document.body.appendChild(styleMain);
+	document.body.appendChild(styleTail);
 	
-	function updateStyles() {
-		styleElement.textContent = 
+	function updateMainStyle() {
+		styleMain.textContent = 
 		"div.snake {\n\
 			position: absolute;\n\
 			width: 0;\n\
@@ -11,20 +15,42 @@ function Snake(snakeDiv, styleElement, len, _ow) {
 		}\n\
 		div.snake>div {\n\
 			position: absolute;\n\
-			background-color: #225;\n\
 			display: inline-block;\n\
 			width: " + iw + "px;\n\
 			height: " + iw + "px;\n\
 			transform-origin: " + iw/2 + "px " + iw/2 + "px;\n\
 			padding-right: " + w2 + "px;\n\
-		}";
+		}\n\
+		div.snake>div[o='0'] {transform: rotate(180deg);}\n\
+		div.snake>div[o='1'] {transform: rotate(-90deg);}\n\
+		div.snake>div[o='2'] {transform: rotate(0deg);}\n\
+		div.snake>div[o='3'] {transform: rotate(90deg);}"
+	}
+	
+	this.updateColors = function(colHead, colTail, colHeadAI, colTailAI) {
+		var colHead1 = new Color(colHead  );
+		var colTail1 = new Color(colTail  );
+		var colHead2 = new Color(colHeadAI);
+		var colTail2 = new Color(colTailAI);
+		var text = "";
+		var N = 10;
+		for (var i = 0; i < N; ++i)
+			text += "div.snake>div:nth-last-child(" + (i+1) + ") { background-image: linear-gradient(to left, " +
+					colHead1.mix(colTail1, i/N).toString("hex6") + ", " + colHead1.mix(colTail1, (i+1)/N).toString("hex6") + "); }\n";
+		text += "div.snake>div { background-color: " + colTail1.toString("hex6") + "; }";
+		text += "\n";
+		for (var i = 0; i < N; ++i)
+			text += "div.snake.ai>div:nth-last-child(" + (i+1) + ") { background-image: linear-gradient(to left, " +
+					colHead2.mix(colTail2, i/N).toString("hex6") + ", " + colHead2.mix(colTail2, (i+1)/N).toString("hex6") + "); }\n";
+		text += "div.snake.ai>div { background-color: " + colTail2.toString("hex6") + "; }";
+		styleTail.textContent = text;
 	}
 	
 	this.resize = function(_ow) {
 		ow = _ow;
 		iw = ow / 1.25;
 		w2 = ow - iw;
-		updateStyles();
+		updateMainStyle();
 	}
 	
 	this.reset = function(len, ow) {

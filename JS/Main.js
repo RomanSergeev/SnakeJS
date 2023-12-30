@@ -1,8 +1,9 @@
 window.onload = function() {
 	body = document.body;
 	ael($("wrap"), "change", () => game.setWrap($("wrap").checked));
-	game = new Game(30, 40, $("game"), $("gameStyle"), 100);
-	game.createSnake($("snakeStyle"), 4);
+	game = new Game(30, 40, $("game"), 100);
+	game.createSnake(4);
+	game.setSnakeStyle("#558", "#225", "#558", "#223");
 	
 	checkWrap();
 	rcn($("overlay"), "shown");
