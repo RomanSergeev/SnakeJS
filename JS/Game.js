@@ -2,14 +2,27 @@ function Game(M, N, gameDiv, startDelay) {
 	var snake = false;
 	var gameover = false;
 	var delay = startDelay;
-	var wrap = false;
+	var bordered = false;
 	var m, n;
 	var inputStack;
 	var foodpos, foodDiv;
 	var ow, iw, w2;
-	var stacked;
-	var gameStyle = document.createElement("style");
-	document.body.appendChild(gameStyle);
+	var stacked = false;
+	var styleFixed = document.createElement("style");
+	var styleSize  = document.createElement("style");
+	var styleColor = document.createElement("style");
+	document.body.appendChild(styleFixed);
+	document.body.appendChild(styleSize );
+	document.body.appendChild(styleColor);
+	
+	styleFixed.textContent = 
+	"div.game {\n\
+		position: relative;\n\
+		display: inline-block;\n\
+	}\n\
+	div.food {\n\
+		position: absolute;\n\
+	}";
 	
 	function dropFood() {
 		var pos;
@@ -31,19 +44,24 @@ function Game(M, N, gameDiv, startDelay) {
 		snake.direction = inputStack[0];
 		inputStack = inputStack.slice(1);
 	}
+	
+	function lose() {
+		gameover = true;
+		window.dispatchEvent(new Event("gameEnded"));
+	}
+	
+	function hitsBorder(elem) { return elem[0] == -1 || elem[0] == m || elem[1] == -1 || elem[1] == n; }
 
 	function move() {
 		if (!snake) return;
 		processInput();
 		var elem = snake.getNextTile();
-		if (!wrap && (elem[0] == -1 || elem[0] == m || elem[1] == -1 || elem[1] == n) || snake.contains(elem)) {
-			gameover = true;
-			acn($("overlay"), "shown");
-			return;
-		}
+		if (!bordered && hitsBorder(elem) || snake.contains(elem))
+			return lose();
 		elem = [byMod(elem[0], m), byMod(elem[1], n)];
 		var eat = (elem[0] == foodpos[0] && elem[1] == foodpos[1]);
 		snake.move(elem, eat);
+		if (snake.length() == m * n) return lose();
 		
 		if (eat) {
 			dropFood();
@@ -59,22 +77,14 @@ function Game(M, N, gameDiv, startDelay) {
 		ow = Math.min(20, Math.max(1, Math.min(Math.floor(dimX / n), Math.floor(dimY / m))));
 		iw = ow / 1.25;
 		w2 = ow - iw;
-		gameStyle.textContent =
+		styleSize.textContent =
 		"div.game {\n\
-			position: relative;\n\
-			display: inline-block;\n\
-			border: 1px solid #558;\n\
 			width: " + ow * n + "px;\n\
 			height: " + ow * m + "px;\n\
 			left: " + Math.max(0, (dimX - ow * n - 2) / 2) + "px;\n\
 			top: " + Math.max(0, (dimY - ow * m - 2) / 2) + "px;\n\
 		}\n\
-		div.game.bordered {\n\
-			box-shadow: 0 0 20px #558;\n\
-		}\n\
 		div.food {\n\
-			position: absolute;\n\
-			background-color: #522;\n\
 			width: " + iw + "px;\n\
 			height: " + iw + "px;\n\
 		}";
@@ -106,8 +116,7 @@ function Game(M, N, gameDiv, startDelay) {
 		delay = startDelay;
 		inputStack = [];
 		dropFood();
-		rcn($("overlay"), "shown");
-		//inputStack = [snake.direction];
+		window.dispatchEvent(new Event("gameStarted"));
 		run();
 	}
 	
@@ -120,13 +129,29 @@ function Game(M, N, gameDiv, startDelay) {
 		inputStack = [];
 	}
 	
-	this.setSnakeStyle = function(colHead, colTail, colHeadAI, colTailAI) {
-		snake?.updateColors(colHead, colTail, colHeadAI, colTailAI);
+	this.setPalette = function(colHead, colTail, colHeadAI, colTailAI, colFood) {
+		var colHead1 = new Color(colHead  );
+		var colTail1 = new Color(colTail  );
+		var colHead2 = new Color(colHeadAI);
+		var colTail2 = new Color(colTailAI);
+		var colFood1 = new Color(colFood  );
+		snake?.updateColors(colHead1, colTail1, colHead2, colTail2);
+		
+		styleColor.textContent =
+		"div.game {\n\
+			border: 1px solid " + colHead1.toString("hex6") + ";\n\
+		}\n\
+		div.game.bordered {\n\
+			box-shadow: 0 0 20px " + colHead1.toString("hex6") + ";\n\
+		}\n\
+		div.food {\n\
+			background-color: " + colFood.toString("hex6") + ";\n\
+		}";
 	}
 	
-	this.setWrap = function(wrapped) {
-		wrap = wrapped;
-		if (wrap) acn(gameDiv, "bordered");
+	this.setBordered = function(isBordered) {
+		bordered = !!isBordered;
+		if (bordered) acn(gameDiv, "bordered");
 		else rcn(gameDiv, "bordered");
 	}
 	
